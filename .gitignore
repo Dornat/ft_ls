@@ -1,0 +1,9 @@
+*.swp
+tags
+ft_ls
+*.o
+ft_ls.dSYM
+.dest
+ls_diff
+my_diff
+sls.sh
