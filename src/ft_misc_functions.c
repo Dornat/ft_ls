@@ -6,7 +6,7 @@
 /*   By: dpolosuk <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/09 10:21:41 by dpolosuk          #+#    #+#             */
-/*   Updated: 2018/02/11 19:04:25 by dpolosuk         ###   ########.fr       */
+/*   Updated: 2018/02/13 16:49:29 by dpolosuk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,9 +25,12 @@ void			ft_put_zeroes_to_lsflags(t_flags *ls_flags)
 
 void			ft_print_ls_usage(char c)
 {
-	ft_printf("ls: illegal option -- %c\n", c);
-	ft_printf("usage: ls [-ABCFGHLOPRSTUWabcdefghiklmnopqrstuwx1] [file ...]");
-	ft_printf("\n");
+	write(2, "ls: illegal option -- ", 22);
+	write(2, &c, 1);
+	write(2, "\n", 1);
+	write(2, "usage: ls [-ABCFGHLOPRSTUWabcdefghiklmnopqrstuwx1] [file ...]", \
+			61);
+	write(2, "\n", 1);
 	exit(1);
 }
 

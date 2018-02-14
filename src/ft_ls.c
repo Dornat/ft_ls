@@ -6,100 +6,50 @@
 /*   By: dpolosuk <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/03 15:47:29 by dpolosuk          #+#    #+#             */
-/*   Updated: 2018/02/11 19:28:49 by dpolosuk         ###   ########.fr       */
+/*   Updated: 2018/02/13 15:45:11 by dpolosuk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <ft_ls.h>
 
-int		ft_is_finav(t_list *names)
-{
-	t_list			*ptr;
-	int				i;
-	struct stat		res;
-
-	ptr = names;
-	i = 0;
-	while (ptr)
-	{
-		lstat(ptr->content, &res);
-		if (S_ISREG(res.st_mode))
-			i++;
-		ptr = ptr->next;
-	}
-	return (i);
-}
-
-int		ft_is_fav(char *path)
-{
-	struct stat		res;
-
-	lstat(path, &res);
-	if (S_ISREG(res.st_mode))
-		return (1);
-	return (0);
-}
-
-t_list		*ft_put_favtolst(t_list *ptr)
-{
-	t_list		*newlst;
-	t_list		*to_free;
-
-	newlst = NULL;
-	to_free = NULL;
-	while (ptr)
-	{
-		if (ft_is_fav((char*)ptr->content))
-		{
-			if (!newlst)
-				newlst = ft_lstnew(ptr->content, \
-						ft_strlen((char*)ptr->content));
-			else
-			{
-				to_free = ft_lstnew(ptr->content, \
-						ft_strlen((char*)ptr->content));
-				ft_lstadd_atend(&newlst, to_free);
-			}
-		}
-		ptr = ptr->next;
-	}
-	return (newlst);
-}
-
-void	ft_ls_deal_with_favs(t_list *favs)
-{
-	while (favs)
-	{
-		ft_printf("%s\n", favs->content);
-		favs = favs->next;
-	}
-}
-
-static void		ft_main_while(t_list *names, int ac, char **av, \
+static void		ft_main_while_if(char *pcont, int *cnt, int *dir, \
 				t_flags *ls_flags)
+{
+	if (*dir)
+	{
+		ft_printf("\n%s:\n", pcont);
+		*cnt = 0;
+	}
+	if (*cnt > 1)
+	{
+		ft_printf("%s:\n", pcont);
+		*cnt = 0;
+	}
+	ft_ls_opn_dir(pcont, ls_flags);
+	*dir = 1;
+}
+
+static void		ft_main_while(t_list *names, t_flags *ls_flags)
 {
 	t_list		*ptr;
 	t_list		*favs;
 	int			dir;
+	int			cnt;
 
 	favs = NULL;
 	ptr = names;
 	dir = 0;
-	if (ft_is_finav(names))
+	cnt = ft_count_lst_nodes(ptr);
+	if (ft_is_finav(names, ls_flags))
 	{
-		favs = ft_put_favtolst(names);
-		ft_ls_deal_with_favs(favs);
+		favs = ft_put_favtolst(names, ls_flags);
+		ft_ls_deal_with_favs(favs, ls_flags);
 		dir = 1;
 	}
 	while (ptr)
 	{
-		if (ft_is_dir((char*)ptr->content, ""))
-		{
-			if (dir)
-				ft_printf("\n%s:\n", ptr->content);
-			ft_ls_opn_dir(ptr->content, ls_flags);
-			dir = 1;
-		}
+		if (ft_is_dir_av((char*)ptr->content, "", ls_flags))
+			ft_main_while_if(ptr->content, &cnt, &dir, ls_flags);
 		ptr = ptr->next;
 	}
 	ft_lstdel(&favs, ft_lstdelfunc);
@@ -128,7 +78,7 @@ int				main(int ac, char **av)
 			ft_lst_merge_sort_t(&names);
 		else if (ls_flags.lit_r && !ls_flags.lit_t)
 			ft_lstrev(&names);
-		ft_main_while(names, ac, av, &ls_flags);
+		ft_main_while(names, &ls_flags);
 	}
 	ft_lstdel(&names, ft_lstdelfunc);
 	return (0);

@@ -6,25 +6,46 @@
 /*   By: dpolosuk <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/09 10:17:23 by dpolosuk          #+#    #+#             */
-/*   Updated: 2018/02/11 12:09:21 by dpolosuk         ###   ########.fr       */
+/*   Updated: 2018/02/13 15:47:12 by dpolosuk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <ft_ls.h>
 
-char	*ft_fgroup(char *file, char *path)
+void	ft_fgroup(char *file, char *path, t_finfo *f_info)
 {
 	struct stat		res;
 	struct group	*gr;
-	char			*group_name;
 	char			*new_path;
 
+	ft_memset(f_info->fgroup, '\0', 33);
 	new_path = ft_strjoin(path, file);
-	lstat(new_path, &res);
+	if (lstat(new_path, &res) == -1)
+	{
+		ft_strdel(&new_path);
+		return ;
+	}
 	gr = getgrgid(res.st_gid);
-	group_name = ft_strdup(gr->gr_name);
+	ft_strcpy(f_info->fgroup, gr->gr_name);
 	ft_strdel(&new_path);
-	return (group_name);
+}
+
+char	*ft_flmdate_sif(char *ftime)
+{
+	char	*res_tofree;
+	char	*res;
+	char	*year;
+	int		ylen;
+
+	res_tofree = ft_strnew(7);
+	ft_memmove(res_tofree, ftime + 4, 7);
+	ylen = ft_strlen(ft_strrchr(ftime, ' '));
+	year = ft_strdup(ft_strrchr(ftime, ' '));
+	year[ylen - 1] = '\0';
+	res = ft_strjoin(res_tofree, year);
+	ft_strdel(&res_tofree);
+	ft_strdel(&year);
+	return (res);
 }
 
 char	*ft_flmdate_s(char *file, char *path)
@@ -36,18 +57,18 @@ char	*ft_flmdate_s(char *file, char *path)
 	time_t			c_time;
 
 	new_path = ft_strjoin(path, file);
-	t_res = ft_strnew(12);
+	t_res = NULL;
 	lstat(new_path, &res);
 	c_time = time(NULL);
 	ftime = ctime(&res.st_mtime);
 	if (((int)c_time - res.st_mtime > 13046400) || \
 		((int)c_time - res.st_mtime < 0))
-	{
-		ft_memmove(t_res, ftime + 4, 7);
-		ft_strncpy(t_res + 7, ftime + 19, 5);
-	}
+		t_res = ft_flmdate_sif(ftime);
 	else
+	{
+		t_res = ft_strnew(12);
 		ft_memmove(t_res, ftime + 4, 12);
+	}
 	ft_strdel(&new_path);
 	return (t_res);
 }
@@ -63,30 +84,4 @@ char	ft_fattr(char *file, char *path)
 	at = xattr > 0 ? '@' : ' ';
 	ft_strdel(&new_path);
 	return (at);
-}
-
-unsigned int	ft_fmajor(char *file, char *path)
-{
-	struct stat		res;
-	unsigned int	maj;
-	char			*new_path;
-
-	new_path = ft_strjoin(path, file);
-	lstat(new_path, &res);
-	maj = major(res.st_rdev);
-	ft_strdel(&new_path);
-	return (maj);
-}
-
-unsigned int	ft_fminor(char *file, char *path)
-{
-	struct stat		res;
-	unsigned int	min;
-	char			*new_path;
-
-	new_path = ft_strjoin(path, file);
-	lstat(new_path, &res);
-	min = minor(res.st_rdev);
-	ft_strdel(&new_path);
-	return (min);
 }

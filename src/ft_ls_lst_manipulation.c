@@ -6,7 +6,7 @@
 /*   By: dpolosuk <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/05 18:04:57 by dpolosuk          #+#    #+#             */
-/*   Updated: 2018/02/07 21:49:21 by dpolosuk         ###   ########.fr       */
+/*   Updated: 2018/02/13 15:33:16 by dpolosuk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,6 +58,21 @@ int		ft_index_of_cur_node(t_list *head, t_list *curr)
 		if (ptr == curr)
 			return (i);
 		ptr = ptr->next;
+		i++;
+	}
+	return (i);
+}
+
+int		ft_count_lst_nodes(t_list *ptr)
+{
+	t_list	*p;
+	int		i;
+
+	p = ptr;
+	i = 0;
+	while (p)
+	{
+		p = p->next;
 		i++;
 	}
 	return (i);

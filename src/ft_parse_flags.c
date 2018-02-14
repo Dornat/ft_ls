@@ -6,7 +6,7 @@
 /*   By: dpolosuk <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/03 17:45:32 by dpolosuk          #+#    #+#             */
-/*   Updated: 2018/02/11 19:17:47 by dpolosuk         ###   ########.fr       */
+/*   Updated: 2018/02/13 15:56:33 by dpolosuk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,8 @@ static void		ft_parse_unit_elif(char c, t_flags *ls_flags)
 		ls_flags->big_r = 1;
 	else if (c == 't')
 		ls_flags->lit_t = 1;
+	else if (c == '1' && ls_flags->lit_ell)
+		ls_flags->lit_ell = 0;
 }
 
 static int		ft_pu_oth_flags(char c)
@@ -45,7 +47,7 @@ static int		ft_pu_oth_flags(char c)
 	return (0);
 }
 
-static void		ft_parse_unit(char *av, t_flags *ls_flags)
+static void		ft_parse_unit(char *av, t_flags *ls_flags, int *fffa)
 {
 	int		i;
 
@@ -53,9 +55,12 @@ static void		ft_parse_unit(char *av, t_flags *ls_flags)
 	while (av[i])
 	{
 		if (av[i] == '-' && !av[i + 1])
+		{
+			*fffa = 42;
 			break ;
+		}
 		else if (av[i] == 'a' || av[i] == 'A' || av[i] == 'l' || av[i] == 'f' \
-			|| av[i] == 'r' || av[i] == 'R' || av[i] == 't')
+			|| av[i] == 'r' || av[i] == 'R' || av[i] == 't' || av[i] == '1')
 			ft_parse_unit_elif(av[i], ls_flags);
 		else if (ft_pu_oth_flags(av[i]))
 			;
@@ -65,21 +70,29 @@ static void		ft_parse_unit(char *av, t_flags *ls_flags)
 	}
 }
 
+static void		ft_parse_flags_elif(char **av, int i, t_list **names)
+{
+	t_list		*newl;
+
+	newl = NULL;
+	newl = ft_lstnew(av[i], ft_strlen(av[i]));
+	newl->content_size = ft_flmdate_i("", av[i]);
+	ft_lstadd_atend(names, newl);
+}
+
 void			ft_parse_flags(int ac, char **av, t_flags *ls_flags, \
 				t_list **names)
 {
 	int			i;
 	int			flag_for_first_arg;
-	t_list		*newl;
 
 	i = 1;
 	flag_for_first_arg = 0;
-	newl = NULL;
 	while (i < ac)
 	{
 		if (av[i][0] == '-' && av[i][1] && !flag_for_first_arg)
-			ft_parse_unit(av[i], ls_flags);
-		else if (!flag_for_first_arg)
+			ft_parse_unit(av[i], ls_flags, &flag_for_first_arg);
+		else if (!flag_for_first_arg || flag_for_first_arg == 42)
 		{
 			if (!ls_flags->lit_f)
 				ft_sort_params(av, i, ac);
@@ -89,11 +102,7 @@ void			ft_parse_flags(int ac, char **av, t_flags *ls_flags, \
 			flag_for_first_arg = 1;
 		}
 		else if (flag_for_first_arg)
-		{
-			newl = ft_lstnew(av[i], ft_strlen(av[i]));
-			newl->content_size = ft_flmdate_i("", av[i]);
-			ft_lstadd_atend(names, newl);
-		}
+			ft_parse_flags_elif(av, i, names);
 		i++;
 	}
 }

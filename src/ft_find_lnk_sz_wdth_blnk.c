@@ -6,7 +6,7 @@
 /*   By: dpolosuk <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/09 10:50:15 by dpolosuk          #+#    #+#             */
-/*   Updated: 2018/02/11 20:07:46 by dpolosuk         ###   ########.fr       */
+/*   Updated: 2018/02/13 13:52:33 by dpolosuk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,7 +77,11 @@ static unsigned int		ft_fblkn(char *file, char *path)
 	char			*new_path;
 
 	new_path = ft_strjoin(path, file);
-	lstat(new_path, &res);
+	if (lstat(new_path, &res) == -1)
+	{
+		ft_strdel(&new_path);
+		return (0);
+	}
 	num = res.st_blocks;
 	ft_strdel(&new_path);
 	return (num);

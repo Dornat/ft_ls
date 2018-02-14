@@ -6,13 +6,11 @@
 /*   By: dpolosuk <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/07 13:20:47 by dpolosuk          #+#    #+#             */
-/*   Updated: 2018/02/11 16:29:42 by dpolosuk         ###   ########.fr       */
+/*   Updated: 2018/02/13 13:51:58 by dpolosuk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <ft_ls.h>
-
-#define MAJ_MIN_OFFSET 3
 
 static int		ft_count_files_in_dir(t_list *ptr, t_flags *ls_flags)
 {

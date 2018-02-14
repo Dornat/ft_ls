@@ -6,7 +6,7 @@
 /*   By: dpolosuk <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/05 18:02:48 by dpolosuk          #+#    #+#             */
-/*   Updated: 2018/02/06 16:18:09 by dpolosuk         ###   ########.fr       */
+/*   Updated: 2018/02/13 13:22:47 by dpolosuk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,8 +22,15 @@ char	*ft_put_slash(char *path)
 	while (path[i])
 		i++;
 	i--;
-	if (i || path[i] == '.')
-		res = ft_strjoin(path, "/");
+	if (i || path[i] == '.' || path[i])
+	{
+		if (!ft_strcmp(path, "/"))
+			res = ft_strdup("/");
+		else
+			res = ft_strjoin(path, "/");
+		if (!ft_strcmp(path, "."))
+			ft_strdel(&path);
+	}
 	else
 		res = ft_strdup("/");
 	return (res);

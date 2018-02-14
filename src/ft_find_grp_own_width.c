@@ -6,7 +6,7 @@
 /*   By: dpolosuk <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/09 10:48:00 by dpolosuk          #+#    #+#             */
-/*   Updated: 2018/02/09 10:48:35 by dpolosuk         ###   ########.fr       */
+/*   Updated: 2018/02/13 12:58:12 by dpolosuk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,14 +14,13 @@
 
 static void		ft_fow_len(char *file, char *path, unsigned int *ow)
 {
-	char			*to_free;
 	unsigned int	len;
+	t_finfo			f_info;
 
-	to_free = ft_fowner(file, path);
-	len = ft_strlen(to_free);
+	ft_fowner(file, path, &f_info);
+	len = ft_strlen(f_info.fowner);
 	if (len > *ow)
 		*ow = len;
-	ft_strdel(&to_free);
 }
 
 unsigned int	ft_find_own_width(t_list *ptr, char *path, t_flags *ls_flags)
@@ -46,14 +45,13 @@ unsigned int	ft_find_own_width(t_list *ptr, char *path, t_flags *ls_flags)
 
 static void		ft_fgrp_len(char *file, char *path, unsigned int *grp)
 {
-	char			*to_free;
 	unsigned int	len;
+	t_finfo			f_info;
 
-	to_free = ft_fgroup(file, path);
-	len = ft_strlen(to_free);
+	ft_fgroup(file, path, &f_info);
+	len = ft_strlen(f_info.fgroup);
 	if (len > *grp)
 		*grp = len;
-	ft_strdel(&to_free);
 }
 
 unsigned int	ft_find_grp_width(t_list *ptr, char *path, t_flags *ls_flags)

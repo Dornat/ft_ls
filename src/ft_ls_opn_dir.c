@@ -6,7 +6,7 @@
 /*   By: dpolosuk <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/05 17:59:44 by dpolosuk          #+#    #+#             */
-/*   Updated: 2018/02/11 20:08:40 by dpolosuk         ###   ########.fr       */
+/*   Updated: 2018/02/14 10:46:39 by dpolosuk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,14 +94,12 @@ void			ft_ls_opn_dir(char *path, t_flags *ls_flags)
 	t_list			*files;
 
 	files = NULL;
-	if (!path)
-	{
-		dir_ptr = opendir(".");
+	if (!path || !ft_strcmp(path, "."))
 		path = ft_strdup(".");
-	}
 	if (!(dir_ptr = opendir(path)))
 	{
-		ft_print_error(ft_strrchr(path, '/') + 1);
+		!(ft_strrchr(path, '/') + 1) ? ft_print_error(path) : \
+			ft_print_error(ft_strrchr(path, '/') + 1);
 		return ;
 	}
 	path = ft_put_slash(path);

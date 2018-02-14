@@ -6,20 +6,24 @@
 #    By: dpolosuk <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2017/12/09 13:27:26 by dpolosuk          #+#    #+#              #
-#    Updated: 2018/02/11 12:11:32 by dpolosuk         ###   ########.fr        #
+#    Updated: 2018/02/13 15:57:12 by dpolosuk         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = ft_ls
 
 SRC = ft_check_for_valid_arg.c \
+		ft_fav_find_lsog_width.c \
+		ft_fav_find_maj_min_width.c \
 		ft_fgdamm_functions.c \
 		ft_find_grp_own_width.c \
 		ft_find_lnk_sz_wdth_blnk.c \
 		ft_find_major_minor_width.c \
+		ft_fmm_functions.c \
 		ft_ftplos_functions.c \
 		ft_is_dir.c \
 		ft_ls.c \
+		ft_ls_deal_with_favs.c \
 		ft_ls_lst_manipulation.c \
 		ft_ls_opn_dir.c \
 		ft_ls_pf_ell.c \
@@ -30,6 +34,7 @@ SRC = ft_check_for_valid_arg.c \
 		ft_parse_flags.c \
 		ft_path_functions.c \
 		ft_print_files_in_dir.c \
+		ft_put_favtolst.c \
 		ft_put_file.c \
 		ft_sort_files_in_dir.c \
 		ft_sort_params.c \
